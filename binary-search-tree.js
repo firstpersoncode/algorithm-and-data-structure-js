@@ -9,7 +9,7 @@ class Node {
 }
 
 class BinarySearchTree {
-  #__node;
+  #__root;
 
   #__search(value, node) {
     if (node !== undefined) {
@@ -23,7 +23,7 @@ class BinarySearchTree {
     return node
   }
 
-  #__generate(value, node) {
+  #__addNode(value, node) {
     if (node === undefined) {
       return new Node(value)
     }
@@ -32,28 +32,28 @@ class BinarySearchTree {
       if (node.left === undefined) {
         node.left = new Node(value)
       } else {
-        this.#__generate(value, node.left)
+        this.#__addNode(value, node.left)
       }
     } else if (value > node.value) {
       if (node.right === undefined) {
         node.right = new Node(value)
       } else {
-        this.#__generate(value, node.right)
+        this.#__addNode(value, node.right)
       }
     }
 
     return node
   }
 
-  #__replace(value, node) {
+  #__removeNode(value, node) {
     if (node === undefined) {
       return undefined
     }
 
     if (value < node.value) {
-      node.left = this.#__replace(value, node.left)
+      node.left = this.#__removeNode(value, node.left)
     } else if (value > node.value) {
-      node.right = this.#__replace(value, node.right)
+      node.right = this.#__removeNode(value, node.right)
     } else {
       if (node.left === undefined && node.right === undefined) {
         node = undefined
@@ -68,7 +68,7 @@ class BinarySearchTree {
         }
 
         node.value = tmp.value
-        node.right = this.#__replace(tmp.value, node.right)
+        node.right = this.#__removeNode(tmp.value, node.right)
       }
     }
 
@@ -76,19 +76,19 @@ class BinarySearchTree {
   }
 
   find(value) {
-    return this.#__search(value, this.#__node)
+    return this.#__search(value, this.#__root)
   }
 
   add(value) {
-    this.#__node = this.#__generate(value, this.#__node)
+    this.#__root = this.#__addNode(value, this.#__root)
   }
 
   remove(value) {
-    this.#__node = this.#__replace(value, this.#__node)
+    this.#__root = this.#__removeNode(value, this.#__root)
   }
 
   min() {
-    let min = this.#__node
+    let min = this.#__root
 
     if (min !== undefined) {
       while (min.left !== undefined) {
@@ -100,7 +100,7 @@ class BinarySearchTree {
   }
 
   max() {
-    let max = this.#__node
+    let max = this.#__root
 
     if (max !== undefined) {
       while (max.right !== undefined) {
@@ -112,27 +112,29 @@ class BinarySearchTree {
   }
 
   val() {
-    return this.#__node
+    return this.#__root
   }
 }
 
+console.log("===================================== Binary Search Tree =====================================")
 const bts = new BinarySearchTree()
-bts.add(50)
+bts.add(9)
 bts.add(17)
-bts.add(18)
+bts.add(4)
+bts.add(22)
 bts.add(3)
-bts.add(72)
-bts.add(12)
+bts.add(6)
+bts.add(10)
+bts.add(20)
+bts.add(5)
+bts.add(7)
+console.log(bts.val())
 console.log("Max", bts.max())
 console.log("Min", bts.min())
-console.log(bts.val())
 console.log("Find 17", bts.find(17))
 bts.remove(17)
-console.log(bts.val())
-console.log("Find 17 after removed", bts.find(17))
+console.log("Find 17 after removed 17 ", bts.find(17))
 bts.remove(3)
-console.log("Min", bts.min())
-bts.add(11)
-bts.add(32)
-console.log("Min", bts.min())
-console.log(bts.val())
+console.log("Min after remove 3", bts.min())
+
+module.exports = BinarySearchTree
